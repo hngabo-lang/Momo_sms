@@ -2,7 +2,7 @@
 
 ## Team: Data Wranglers
 ## Team Members
-- Henry Ngabo
+- Aristote Henry Ngabo
 - Precious Azubuike
 - Griphen Mweene
 

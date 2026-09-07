@@ -1,9 +1,9 @@
 # MoMo SMS 
 
-## Team: Data Wranglers
+## Team Name: Data Wranglers
 ## Team Members
 - Aristote Henry Ngabo
-- Precious Azubuike
+- Precious Amarachi Azubuike
 - Griphen Mweene
 
 ## Overview

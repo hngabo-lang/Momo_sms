@@ -1,0 +1,81 @@
+{
+  "ex_users": {
+    "user_id": "u001-uuid-0000-0001",
+    "phone_number": "+250788000001",
+    "full_name": "Alice Umutoni",
+    "role": "sender",
+    "created_at": "2026-03-01 08:00:00"
+  },
+
+  "ex_transaction_categories": {
+    "category_id": "c001-uuid-0000-0001",
+    "category_name": "P2P Transfer",
+    "description": "Person-to-person money transfer"
+  },
+
+  "ex_transactions": {
+    "transaction_id": "t001-uuid-0000-0001",
+    "sender_id": "u001-uuid-0000-0001",
+    "receiver_id": "u002-uuid-0000-0002",
+    "amount": 5000.00,
+    "transaction_date": "2026-03-01 10:15:00",
+    "status": "completed",
+    "raw_message": "TxId: 101, Sent 5000 RWF to Bob"
+  },
+
+  "ex_system_logs": {
+    "log_id": "l001-uuid-0000-0001",
+    "transaction_id": "t001-uuid-0000-0001",
+    "log_level": "INFO",
+    "source_stage": "XML_PARSER",
+    "message": "Successfully parsed MoMo SMS XML",
+    "created_at": "2026-03-01 10:15:05"
+  },
+
+  "ex_full_transaction_with_related_data": {
+    "transaction_id": "t002-uuid-0000-0002",
+    "amount": 12500.50,
+    "transaction_date": "2026-03-01 11:20:00",
+    "status": "completed",
+    "raw_message": "TxId: 102, Sent 12500.5 RWF to David",
+
+    "sender": {
+      "user_id": "u003-uuid-0000-0003",
+      "full_name": "Charlie Keza",
+      "phone_number": "+250788000003"
+    },
+
+    "receiver": {
+      "user_id": "u004-uuid-0000-0004",
+      "full_name": "David Niyomugabo",
+      "phone_number": "+250788000004"
+    },
+
+    "categories": [
+      {
+        "category_id": "c001-uuid-0000-0001",
+        "category_name": "P2P Transfer"
+      }
+    ],
+
+    "logs": [
+      {
+        "log_id": "l002-uuid-0000-0002",
+        "log_level": "INFO",
+        "message": "Transaction record committed"
+      }
+    ]
+  },
+
+  "ex_how_maped_to_our_database": {
+    "Users": "Shows up twice on a transaction, once as 'sender' and once as 'receiver'. Same table, just used for two different roles.",
+
+    "Transactions": "This is the main object everything else attaches to. Instead of leaving sender_id and receiver_id as plain IDs, we swap them for the actual user details, since that's more useful for whoever is reading the response.",
+
+    "Transaction_Categories": "Sits inside the 'categories' list on a transaction.",
+
+    "Transaction_Category_Mapping": "This table doesn't get its own object in the JSON. Since it just links a transaction to a category, we let it disappear and turn straight into the 'categories' array instead.",
+
+    "System_Logs": "Attached under 'logs', linked back to whichever transaction they belong to through transaction_id."
+  }
+}

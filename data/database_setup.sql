@@ -1,7 +1,9 @@
--- Active: 1789244491841@@127.0.0.1@3306
+
+-- Create the database (skip if it already exists) and select it
 CREATE DATABASE IF NOT EXISTS momo_sms_db;
 USE momo_sms_db;
 
+-- Stores each mobile money user
 CREATE TABLE IF NOT EXISTS Users (
     user_id VARCHAR(36) PRIMARY KEY,
     phone_number VARCHAR(15) UNIQUE NOT NULL,
@@ -10,6 +12,7 @@ CREATE TABLE IF NOT EXISTS Users (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Stores each mobile money transaction, linked to a sender and receiver
 CREATE TABLE IF NOT EXISTS Transactions (
     transaction_id VARCHAR(36) PRIMARY KEY,
     sender_id VARCHAR(36) NOT NULL,
@@ -24,12 +27,14 @@ CREATE TABLE IF NOT EXISTS Transactions (
     CONSTRAINT chk_tx_amount CHECK (amount > 0)
 );
 
+-- Lookup table of transaction category types (e.g. P2P, airtime, bill)
 CREATE TABLE IF NOT EXISTS Transaction_Categories (
     category_id VARCHAR(36) PRIMARY KEY,
     category_name VARCHAR(50) UNIQUE NOT NULL,
     description TEXT
 );
 
+-- Join table linking transactions to one or more categories
 CREATE TABLE IF NOT EXISTS Transaction_Category_Mapping (
     transaction_id VARCHAR(36) NOT NULL,
     category_id VARCHAR(36) NOT NULL,
@@ -39,6 +44,7 @@ CREATE TABLE IF NOT EXISTS Transaction_Category_Mapping (
     CONSTRAINT fk_map_cat FOREIGN KEY (category_id) REFERENCES Transaction_Categories(category_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- Tracks system events/errors, optionally tied to a transaction
 CREATE TABLE IF NOT EXISTS System_Logs (
     log_id VARCHAR(36) PRIMARY KEY,
     transaction_id VARCHAR(36),
@@ -49,11 +55,13 @@ CREATE TABLE IF NOT EXISTS System_Logs (
     CONSTRAINT fk_log_tx FOREIGN KEY (transaction_id) REFERENCES Transactions(transaction_id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
+-- Indexes to speed up common lookups/filters
 CREATE INDEX idx_users_phone ON Users(phone_number);
 CREATE INDEX idx_tx_date ON Transactions(transaction_date);
 CREATE INDEX idx_tx_status ON Transactions(status);
 CREATE INDEX idx_logs_level ON System_Logs(log_level);
 
+-- Seed data: sample users
 INSERT INTO Users (user_id, phone_number, full_name, role) VALUES
 ('u001-uuid-0000-0001', '+250788000001', 'Alice Umutoni', 'sender'),
 ('u002-uuid-0000-0002', '+250788000002', 'Bob Mugisha', 'receiver'),
@@ -61,6 +69,7 @@ INSERT INTO Users (user_id, phone_number, full_name, role) VALUES
 ('u004-uuid-0000-0004', '+250788000004', 'David Niyomugabo', 'both'),
 ('u005-uuid-0000-0005', '+250788000005', 'Eva Iradukunda', 'receiver');
 
+-- Seed data: sample transaction categories
 INSERT INTO Transaction_Categories (category_id, category_name, description) VALUES
 ('c001-uuid-0000-0001', 'P2P Transfer', 'Person-to-person money transfer'),
 ('c002-uuid-0000-0002', 'Airtime Purchase', 'Airtime recharge via Mobile Money'),
@@ -68,6 +77,7 @@ INSERT INTO Transaction_Categories (category_id, category_name, description) VAL
 ('c004-uuid-0000-0004', 'Utility Bill', 'Electricity or water bill settlement'),
 ('c005-uuid-0000-0005', 'Bank Deposit', 'Transfer from mobile wallet to bank account');
 
+-- Seed data: sample transactions
 INSERT INTO Transactions (transaction_id, sender_id, receiver_id, amount, transaction_date, status, raw_message) VALUES
 ('t001-uuid-0000-0001', 'u001-uuid-0000-0001', 'u002-uuid-0000-0002', 5000.00, '2026-03-01 10:15:00', 'completed', 'TxId: 101, Sent 5000 RWF to Bob'),
 ('t002-uuid-0000-0002', 'u003-uuid-0000-0003', 'u004-uuid-0000-0004', 12500.50, '2026-03-01 11:20:00', 'completed', 'TxId: 102, Sent 12500.5 RWF to David'),
@@ -75,6 +85,7 @@ INSERT INTO Transactions (transaction_id, sender_id, receiver_id, amount, transa
 ('t004-uuid-0000-0004', 'u004-uuid-0000-0004', 'u002-uuid-0000-0002', 45000.00, '2026-03-02 09:45:00', 'completed', 'TxId: 104, Payment to Bob'),
 ('t005-uuid-0000-0005', 'u003-uuid-0000-0003', 'u001-uuid-0000-0001', 1000.00, '2026-03-02 14:10:00', 'pending', 'TxId: 105, Airtime top-up pending');
 
+-- Seed data: tag each transaction with a category
 INSERT INTO Transaction_Category_Mapping (transaction_id, category_id) VALUES
 ('t001-uuid-0000-0001', 'c001-uuid-0000-0001'),
 ('t002-uuid-0000-0002', 'c001-uuid-0000-0001'),
@@ -82,6 +93,7 @@ INSERT INTO Transaction_Category_Mapping (transaction_id, category_id) VALUES
 ('t004-uuid-0000-0004', 'c003-uuid-0000-0003'),
 ('t005-uuid-0000-0005', 'c002-uuid-0000-0002');
 
+-- Seed data: sample system log entries
 INSERT INTO System_Logs (log_id, transaction_id, log_level, source_stage, message) VALUES
 ('l001-uuid-0000-0001', 't001-uuid-0000-0001', 'INFO', 'XML_PARSER', 'Successfully parsed MoMo SMS XML'),
 ('l002-uuid-0000-0002', 't002-uuid-0000-0002', 'INFO', 'DB_INGESTION', 'Transaction record committed'),
@@ -89,9 +101,11 @@ INSERT INTO System_Logs (log_id, transaction_id, log_level, source_stage, messag
 ('l004-uuid-0000-0004', 't004-uuid-0000-0004', 'INFO', 'DB_INGESTION', 'Merchant payment logged'),
 ('l005-uuid-0000-0005', 't005-uuid-0000-0005', 'WARNING', 'NETWORK_HANDLER', 'Timeout waiting for gateway callback');
 
+-- Add one more user after the initial seed
 INSERT INTO Users (user_id, phone_number, full_name, role) 
 VALUES ('u006-uuid-0000-0006', '+250788000006', 'Frank Habimana', 'sender');
 
+-- View all transactions with sender/receiver names instead of IDs
 SELECT 
     t.transaction_id,
     s.full_name AS sender,
@@ -103,13 +117,16 @@ FROM Transactions t
 JOIN Users s ON t.sender_id = s.user_id
 JOIN Users r ON t.receiver_id = r.user_id;
 
+-- Mark a pending transaction as completed
 UPDATE Transactions 
 SET status = 'completed' 
 WHERE transaction_id = 't005-uuid-0000-0005';
 
+-- Remove a resolved log entry
 DELETE FROM System_Logs 
 WHERE log_id = 'l005-uuid-0000-0005';
 
 
+-- Quick checks: view all users, inspect Transactions table structure
 SELECT * FROM Users;
 DESCRIBE Transactions;

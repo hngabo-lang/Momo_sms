@@ -1,12 +1,12 @@
 -- Active: 1789244491841@@127.0.0.1@3306
--- CREATE DATABASE IF NOT EXISTS momo_sms_db;
--- USE momo_sms_db;
+CREATE DATABASE IF NOT EXISTS momo_sms_db;
+USE momo_sms_db;
 
 CREATE TABLE IF NOT EXISTS Users (
     user_id VARCHAR(36) PRIMARY KEY,
     phone_number VARCHAR(15) UNIQUE NOT NULL,
     full_name VARCHAR(100) NOT NULL,
-    role TEXT NOT NULL DEFAULT 'both',
+    role VARCHAR(20) NOT NULL DEFAULT 'both',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS Transactions (
     receiver_id VARCHAR(36) NOT NULL,
     amount DECIMAL(12, 2) NOT NULL,
     transaction_date DATETIME NOT NULL,
-    status TEXT NOT NULL DEFAULT 'pending',
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
     raw_message TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_tx_sender FOREIGN KEY (sender_id) REFERENCES Users(user_id) ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS Transaction_Category_Mapping (
 CREATE TABLE IF NOT EXISTS System_Logs (
     log_id VARCHAR(36) PRIMARY KEY,
     transaction_id VARCHAR(36),
-    log_level TEXT NOT NULL DEFAULT 'INFO',
+    log_level VARCHAR(20) NOT NULL DEFAULT 'INFO',
     source_stage VARCHAR(30) NOT NULL,
     message TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -109,3 +109,7 @@ WHERE transaction_id = 't005-uuid-0000-0005';
 
 DELETE FROM System_Logs 
 WHERE log_id = 'l005-uuid-0000-0005';
+
+
+SELECT * FROM Users;
+DESCRIBE Transactions;

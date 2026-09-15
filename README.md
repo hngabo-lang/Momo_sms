@@ -48,21 +48,21 @@ Stores mobile money transactions, client's data, transaction types, and system p
 
 ## Tables
 
-**Users** senders and receivers. One table, two roles.
+**Users**: senders and receivers. One table, two roles.
 
-**Transactions** the money movements. Links to a sender and receiver, has an amount, date, and status.
+**Transactions**: the money movements. Links to a sender and receiver, has an amount, date, and status.
 
-**Transaction_Categories** transaction types (People to People Transfer, Airtime Purchase, etc).
+**Transaction_Categories**: transaction types (People to People Transfer, Airtime Purchase, etc).
 
-**Transaction_Category_Mapping** junction table linking transactions to categories, since one transaction can have more than one category.
+**Transaction_Category_Mapping**: junction table linking transactions to categories, since one transaction can have more than one category.
 
-**System_Logs** tracks what happened while a transaction was processed.
+**System_Logs**: tracks what happened while a transaction was processed.
 
 ## Key design choices
 
-- **UUIDs, not auto-increment IDs** To avoid conflicts since data comes in from SMS, not a single controlled source.
-- **One Users table for both roles** the same person can be a sender in one transaction and a receiver in another.
-- **Junction table for categories** the standard fix for a many-to-many relationship.
+- **UUIDs, not auto-increment IDs**: To avoid conflicts since data comes in from SMS, not a single controlled source.
+- **One Users table for both roles**: the same person can be a sender in one transaction and a receiver in another.
+- **Junction table for categories**: the standard fix for a many-to-many relationship.
 
 ## SQL -> JSON
 

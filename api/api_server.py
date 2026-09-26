@@ -1,4 +1,4 @@
-
+import base64
 import json
 import re
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -7,6 +7,11 @@ from urllib.parse import urlparse
 DATA_FILE = "transactions.json"
 LIST_PATH = "/transactions"
 ID_PATH_RE = re.compile(r"^/transactions/(\d+)/?$")
+
+# Auth login credentials
+VALID_USERNAME = "admin"
+VALID_PASSWORD = "momo2026"
+REALM = "MoMo SMS API"
 
 
 def load_transactions(path=DATA_FILE):
@@ -28,6 +33,39 @@ def save_transactions(path=DATA_FILE):
 
 
 class TransactionHandler(BaseHTTPRequestHandler):
+
+    def _authenticate(self):
+        """Check the Authorization header for valid Basic Auth credentials.
+        Returns True if okay to continue. If not, sends a 401 response
+        and returns False -- caller should return right away."""
+        auth_header = self.headers.get("Authorization")
+
+        if not auth_header or not auth_header.startswith("Basic "):
+            self._send_unauthorized("Missing or malformed Authorization header")
+            return False
+
+        encoded = auth_header.split(" ", 1)[1]
+        try:
+            decoded = base64.b64decode(encoded).decode("utf-8")
+            username, password = decoded.split(":", 1)
+        except (ValueError, UnicodeDecodeError):
+            self._send_unauthorized("Malformed credentials")
+            return False
+
+        if username != VALID_USERNAME or password != VALID_PASSWORD:
+            self._send_unauthorized("Invalid username or password")
+            return False
+
+        return True
+
+    def _send_unauthorized(self, message):
+        body = json.dumps({"error": message}).encode("utf-8")
+        self.send_response(401)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("WWW-Authenticate", f'Basic realm="{REALM}"')
+        self.end_headers()
+        self.wfile.write(body)
 
     def _send_json(self, status, payload):
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -51,6 +89,9 @@ class TransactionHandler(BaseHTTPRequestHandler):
 
     # GET /transactions, GET /transactions/<id>
     def do_GET(self):
+        if not self._authenticate():
+            return
+
         path = urlparse(self.path).path
 
         if path == LIST_PATH:
@@ -71,6 +112,9 @@ class TransactionHandler(BaseHTTPRequestHandler):
 
     # POST /transactions
     def do_POST(self):
+        if not self._authenticate():
+            return
+
         global NEXT_ID
         path = urlparse(self.path).path
 
@@ -97,6 +141,9 @@ class TransactionHandler(BaseHTTPRequestHandler):
 
     # PUT /transactions/<id>
     def do_PUT(self):
+        if not self._authenticate():
+            return
+
         path = urlparse(self.path).path
         match = ID_PATH_RE.match(path)
         if not match:
@@ -125,6 +172,9 @@ class TransactionHandler(BaseHTTPRequestHandler):
 
     # DELETE /transactions/<id>
     def do_DELETE(self):
+        if not self._authenticate():
+            return
+
         path = urlparse(self.path).path
         match = ID_PATH_RE.match(path)
         if not match:

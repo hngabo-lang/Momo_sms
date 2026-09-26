@@ -85,7 +85,7 @@ curl -u user:momo123 http://localhost:8000/transactions/1
 | Code | Reason |
 |---|---|
 | 401 | Missing or wrong credentials |
-| 404 | `{ "error": "Transaction 999 not found" }` |
+| 404 | `{ "error": "Transaction 1 not found" }` |
 
 ---
 

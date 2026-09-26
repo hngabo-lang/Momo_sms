@@ -1,18 +1,5 @@
 [
   {
-    "id": 1,
-    "type": "received_money",
-    "amount": 9999,
-    "fee": null,
-    "balance": null,
-    "sender": "Jane Smith",
-    "receiver": "me",
-    "phone": null,
-    "transaction_ref": "76662021700",
-    "timestamp": "10 May 2024 4:30:58 PM",
-    "raw_body": "You have received 2000 RWF from Jane Smith (*********013) on your mobile money account at 2024-05-10 16:30:51. Message from sender: . Your new balance:2000 RWF. Financial Transaction Id: 76662021700."
-  },
-  {
     "id": 2,
     "type": "payment",
     "amount": 1000,
@@ -21986,5 +21973,12 @@
     "type": "payment",
     "amount": 5000,
     "id": 1692
+  },
+  {
+    "type": "payment",
+    "amount": 5000,
+    "sender": "me",
+    "receiver": "Samuel Carter",
+    "id": 1693
   }
 ]

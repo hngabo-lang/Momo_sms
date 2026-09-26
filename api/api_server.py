@@ -1,21 +1,4 @@
-"""
-api_server.py
 
-Plain-Python REST API (http.server only -- no Flask, no third-party
-frameworks) serving the MoMo SMS transactions parsed in parse_xml.py.
-
-Endpoints:
-    GET    /transactions        -> list all transactions
-    GET    /transactions/<id>   -> view a single transaction
-    POST   /transactions        -> create a new transaction
-    PUT    /transactions/<id>   -> update an existing transaction
-    DELETE /transactions/<id>   -> delete a transaction
-
-Data is loaded from transactions.json at startup and kept in memory
-(both as a list, to preserve order for GET /transactions, and as a
-dict keyed by id, for fast lookup by GET/PUT/DELETE). Every write
-operation (POST/PUT/DELETE) persists the change back to disk.
-"""
 import json
 import re
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -66,9 +49,7 @@ class TransactionHandler(BaseHTTPRequestHandler):
         except json.JSONDecodeError:
             return None, "Request body is not valid JSON"
 
-    # ---------------------------------------------------------------
     # GET /transactions, GET /transactions/<id>
-    # ---------------------------------------------------------------
     def do_GET(self):
         path = urlparse(self.path).path
 
@@ -88,9 +69,7 @@ class TransactionHandler(BaseHTTPRequestHandler):
 
         self._send_json(404, {"error": f"Unknown endpoint: GET {path}"})
 
-    # ---------------------------------------------------------------
     # POST /transactions
-    # ---------------------------------------------------------------
     def do_POST(self):
         global NEXT_ID
         path = urlparse(self.path).path
@@ -116,9 +95,7 @@ class TransactionHandler(BaseHTTPRequestHandler):
 
         self._send_json(201, new_transaction)
 
-    # ---------------------------------------------------------------
     # PUT /transactions/<id>
-    # ---------------------------------------------------------------
     def do_PUT(self):
         path = urlparse(self.path).path
         match = ID_PATH_RE.match(path)
@@ -146,9 +123,7 @@ class TransactionHandler(BaseHTTPRequestHandler):
 
         self._send_json(200, transaction)
 
-    # ---------------------------------------------------------------
     # DELETE /transactions/<id>
-    # ---------------------------------------------------------------
     def do_DELETE(self):
         path = urlparse(self.path).path
         match = ID_PATH_RE.match(path)

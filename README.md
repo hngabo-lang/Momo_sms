@@ -113,6 +113,7 @@ Stores mobile money transactions, client's data, transaction types, and system p
 - `database/database_setup.sql` 
 - `docs/erd_diagram.png` 
 - `examples/json_schemas.json`
+- `data/momo_sms.db`
 
 ## Tables
 

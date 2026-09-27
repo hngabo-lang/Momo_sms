@@ -22,7 +22,7 @@ categorizes it, loads it into SQLite, and serves it to a static dashboard.
 
 ## Repository Structure
 
-```text
+##text
 Momo_sms/
 ├── api/
 │   ├── server.py             # Custom http.server REST API implementation
@@ -46,8 +46,59 @@ Momo_sms/
 │   └── 07_dsa_benchmark.png
 ├── README.md
 └── requirements.txt
+
+Setup & Running Instructions
+Prerequisites
+Python 3.10+
+Standard command-line tools (curl, git)
+
+1. Repository Setup
+Clone the repository and navigate into the project root:
+
+Bash
+git clone [https://github.com/hngabo-lang/Momo_sms.git](https://github.com/hngabo-lang/Momo_sms.git)
+cd Momo_sms
+2. Parse XML Data
+To parse raw XML SMS messages into structured JSON format:
+
+Bash
+python DSA/parse_xml.py
+3. Run the REST API Server
+Start the lightweight Python API server:
+
+Bash
+python api/server.py
+Host: http://localhost:8000
+
+Authentication: Basic Auth (admin:momo2026)
+
+4. API Testing (curl Examples)
+GET All Transactions
+Bash
+curl -i -u admin:momo2026 http://localhost:8000/transactions
+GET Transaction by ID
+Bash
+curl -i -u admin:momo2026 http://localhost:8000/transactions/1
+Unauthorized Request Test (Returns HTTP 401)
+Bash
+curl -i -u wrong:wrong http://localhost:8000/transactions
+POST New Transaction
+DOS
+curl.exe -i -X POST -u admin:momo2026 http://localhost:8000/transactions -H "Content-Type: application/json" -d "{\"type\":\"payment\",\"amount\":5000,\"sender\":\"me\",\"receiver\":\"Samuel Carter\"}"
+PUT Update Transaction
+DOS
+curl.exe -i -X PUT -u admin:momo2026 http://localhost:8000/transactions/1 -H "Content-Type: application/json" -d "{\"type\":\"received_money\",\"amount\":9999}"
+DELETE Transaction
+DOS
+curl.exe -i -X DELETE -u admin:momo2026 http://localhost:8000/transactions/1
+5. Run DSA Search Benchmark
+To benchmark Linear Search vs Dictionary Lookup execution times:
+
+Bash
+python DSA/search_benchmark.py
 ## Database
 Stores mobile money transactions, client's data, transaction types, and system processing logs.
+
 
 ## Files
 

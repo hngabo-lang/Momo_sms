@@ -22,7 +22,7 @@ categorizes it, loads it into SQLite, and serves it to a static dashboard.
 
 ## Repository Structure
 
-##text
+``text
 Momo_sms/
 ├── api/
 │   ├── server.py             # Custom http.server REST API implementation
@@ -47,7 +47,7 @@ Momo_sms/
 ├── README.md
 └── requirements.txt
 
-Setup & Running Instructions
+##Setup & Running Instructions
 Prerequisites
 Python 3.10+
 Standard command-line tools (curl, git)

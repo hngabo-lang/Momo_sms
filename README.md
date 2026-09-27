@@ -74,3 +74,4 @@ Our JSON doesn't just copy the tables directly. Foreign keys like `sender_id` ar
 - Lucidchart: https://lucid.app/lucidchart/0ce04555-5fe4-4c3f-9fee-26a182c7b652/edit?viewport_loc=216%2C-267%2C1495%2C649%2C0_0&invitationId=inv_92a4b0c0-f8cb-4805-9710-f49c9e62f109
 - Link to SQL Database Implementation screenshots: https://docs.google.com/document/d/1Jzo0JaXtIp2ocGSjO2ETHiEebs29eiYS0Ln0mNBuYlM/edit?usp=sharing
 - Link to the team task sheet: https://docs.google.com/spreadsheets/d/1S0xm5j8I43kKKTh2M_qVrZCBBK66oAN7SLFkv2QZU48/edit?usp=sharing
+- Link to team task sheet formative 3: https://docs.google.com/spreadsheets/d/1iXm2f6r2NkduzjPPgUPX7PybRx1mIhQp8P6tP12SPvQ/edit?usp=sharing

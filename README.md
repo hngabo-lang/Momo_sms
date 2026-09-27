@@ -20,22 +20,31 @@ categorizes it, loads it into SQLite, and serves it to a static dashboard.
 - Representing database information using JSON.
 - Making sure the database maintains accurate and consistent data.
 
-## Tree structure
+## Repository Structure
+
+```text
 Momo_sms/
 ├── api/
-├── core/
-├── data/ 
-|   └── database_setup.sql    
-├── etl/
-├── examples/           
-│   └── json_schemas.json
-├── scripts/
-├── tests/
-├── web/
-├── .env.example
-├── .gitignore
+│   ├── server.py             # Custom http.server REST API implementation
+│   └── transactions.json     # Data store backing the API endpoints
+├── DSA/
+│   ├── parse_xml.py          # XML SMS parsing script
+│   └── search_benchmark.py   # DSA search algorithm benchmarking script
+├── docs/
+│   ├── api_docs.md           # API endpoint specifications and examples
+│   └── erd_diagram.png       # Database ERD model
+├── data/
+│   ├── database_setup.sql    # Database schema definitions
+│   └── momo_sms.db           # SQLite database instance
+├── screenshots/              # Evidence screenshots for API test cases & DSA benchmark
+│   ├── 01_successful_get_all.png
+│   ├── 02_successful_get_by_id.png
+│   ├── 03_unauthorized_request.png
+│   ├── 04_successful_post.png
+│   ├── 05_successful_put.png
+│   ├── 06_successful_delete.png
+│   └── 07_dsa_benchmark.png
 ├── README.md
-├── index.html
 └── requirements.txt
 ## Database
 Stores mobile money transactions, client's data, transaction types, and system processing logs.

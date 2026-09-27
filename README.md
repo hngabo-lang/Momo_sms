@@ -47,7 +47,7 @@ Momo_sms/
 ├── README.md
 └── requirements.txt
 
-##Setup & Running Instructions
+## Setup & Running Instructions
 Prerequisites
 Python 3.10+
 Standard command-line tools (curl, git)
@@ -58,11 +58,13 @@ Clone the repository and navigate into the project root:
 Bash
 git clone [https://github.com/hngabo-lang/Momo_sms.git](https://github.com/hngabo-lang/Momo_sms.git)
 cd Momo_sms
+
 2. Parse XML Data
 To parse raw XML SMS messages into structured JSON format:
 
 Bash
 python DSA/parse_xml.py
+
 3. Run the REST API Server
 Start the lightweight Python API server:
 

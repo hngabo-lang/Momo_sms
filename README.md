@@ -78,21 +78,27 @@ Authentication: Basic Auth (admin:momo2026)
 GET All Transactions
 Bash
 curl -i -u admin:momo2026 http://localhost:8000/transactions
+
 GET Transaction by ID
 Bash
 curl -i -u admin:momo2026 http://localhost:8000/transactions/1
+
 Unauthorized Request Test (Returns HTTP 401)
 Bash
 curl -i -u wrong:wrong http://localhost:8000/transactions
+
 POST New Transaction
 DOS
 curl.exe -i -X POST -u admin:momo2026 http://localhost:8000/transactions -H "Content-Type: application/json" -d "{\"type\":\"payment\",\"amount\":5000,\"sender\":\"me\",\"receiver\":\"Samuel Carter\"}"
+
 PUT Update Transaction
 DOS
 curl.exe -i -X PUT -u admin:momo2026 http://localhost:8000/transactions/1 -H "Content-Type: application/json" -d "{\"type\":\"received_money\",\"amount\":9999}"
+
 DELETE Transaction
 DOS
 curl.exe -i -X DELETE -u admin:momo2026 http://localhost:8000/transactions/1
+
 5. Run DSA Search Benchmark
 To benchmark Linear Search vs Dictionary Lookup execution times:
 
